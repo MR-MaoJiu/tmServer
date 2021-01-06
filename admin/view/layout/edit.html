@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    {block name="title"}
+
+    {/block}
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/admin1/css/font.css">
+    <link rel="stylesheet" href="/admin1/css/xadmin.css">
+    <script src="/admin1/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/admin1/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/admin1/js/xadmin.js"></script>
+    <link rel="stylesheet" type="text/css" href="/admin/css/webuploader.css">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-edit" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{$info.id}">
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_email" value="{$info.email}" name="email" required="" lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>将会成为您唯一的登入名
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="有效用户" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>有效</span><i class="layui-icon"></i></div>
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="无效用户"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>无效</span><i class="layui-icon"></i></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_username" class="layui-form-label">
+                <span class="x-red">*</span>中文名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_username" value="{$info.username}" name="remark" required="" placeholder="填自己名字" lay-verify="remark"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+                {volist id="vo" name="roles"}
+                <input type="checkbox" value="{$vo.id}" name="rids[]" lay-skin="primary" title="{$vo.rname}"><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>{$vo.rname}</span><i class="layui-icon"></i></div>
+                {/volist}
+            </div>
+        </div>
+        <!--            <div class="layui-form-item">-->
+        <!--                <label class="layui-form-label">角色</label>-->
+        <!--                <div class="layui-input-block">-->
+
+        <!--                    <input type="radio" name="rid" value="{$vo.id}" title="{$vo.rname}"><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><div>{$vo.rname}</div></div>-->
+        <!--                    {/volist}-->
+        <!--&lt;!&ndash;                    <input type="radio" name="sex" value="女" title="女" checked=""><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><div>女</div></div>&ndash;&gt;-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <div class="layui-form-item">
+            <label for="img" class="layui-form-label">
+                <span class="x-red">*</span>用户头像
+            </label>
+            <div class="layui-upload layui-input-inline">
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <div class="layui-upload-list">
+                    <img style="width:200px;" class="layui-upload-img" id="demo1">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+            <input type="hidden" name="img" id="img">
+        </div>
+        <div class="layui-form-item">
+            <label for="hospital" class="layui-form-label">
+                <span class="x-red">*</span>所属医院
+            </label>
+            <div class="layui-input-inline">
+                <select id="hospital" name="hospital_id" class="valid">
+                    <option value="0">请选择医院</option>
+                    {volist name="hospitals" id="hospital"}
+                    <option value="{$hospital.id}">{$hospital.hname}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-edit" class="layui-form-label">
+            </label>
+            <button id="btn-edit" class="layui-btn" lay-filter="edit" lay-submit="">
+                修改用户
+            </button>
+        </div>
+    </form>
+</div>
+{/block}
+<script type="text/javascript" src="/admin/js/webuploader.min.js"></script>
+<script type="text/javascript">
+    //layui文件上传
+    layui.use('upload', function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: "{:url('Upload/upload')}"
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code == 1){
+                    $('#img').val(res.url);
+                    return layer.msg(res.msg);
+                }else{
+                    return layer.msg(res.msg);
+                }
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>
+<!--视频上传-->
+<script type="text/javascript">
+    uploadfiles(2655,"files");
+    function uploadfiles(ids,folder) {
+        $(function(){
+            var $list = $("#the_"+ids);
+            $btn = $("#Btn_"+ids);
+            var uploader = WebUploader.create({
+                resize: false, // 不压缩image
+                swf: '/admin/js/uploader.swf', // swf文件路径
+                server: '{:url("Upload/uploadFile")}', // 文件接收服务端。
+                pick: "#pick_"+ids, // 选择文件的按钮。可选
+                chunked: true, //是否要分片处理大文件上传
+                chunkSize:5*1024*1024, //分片上传，每片2M，默认是5M
+                //fileSizeLimit: 6*1024* 1024 * 1024,    // 所有文件总大小限制 6G
+                fileSingleSizeLimit: 10*3*1024* 1024 * 1024,    // 单个文件大小限制 5 G
+                formData: {
+                    folder:folder  //自定义参数
+                },
+                //auto: false //选择文件后是否自动上传
+                chunkRetry : 5, //如果某个分片由于网络问题出错，允许自动重传次数
+                //runtimeOrder: 'html5,flash',
+                // accept: {
+                //   title: 'Images',
+                //   extensions: 'gif,jpg,jpeg,bmp,png',
+                //   mimeTypes: 'image/*'
+                // }
+            });
+            // 当有文件被添加进队列的时候
+            uploader.on( 'fileQueued', function( file ) {
+                $list.append( '<div id="' + file.id + '" class="item">' +
+                    '<h4 class="info">' + file.name + '</h4>' +
+                    '<p class="state">等待上传...</p>' +
+                    '</div>' );
+            });
+            // 文件上传过程中创建进度条实时显示。
+            uploader.on( 'uploadProgress', function( file, percentage ) {
+                var $li = $( '#'+file.id ),
+                    $percent = $li.find('.progress .progress-bar');
+
+                // 避免重复创建
+                if ( !$percent.length ) {
+                    $percent = $('<div class="progress progress-striped active">' +
+                        '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                        '</div>' +
+                        '</div>').appendTo( $li ).find('.progress-bar');
+                }
+
+                $li.find('p.state').text('上传中');
+
+                $percent.css( 'width', percentage * 100 + '%' );
+            });
+            // 文件上传成功
+            uploader.on( 'uploadSuccess', function( file,response) {
+                $( '#'+file.id ).find('p.state').text('已上传');
+                $list.append('<input type="hidden" name="src" value="'+response.filePath+'" />');
+                alert(response.filePath);
+            });
+
+            // 文件上传失败，显示上传出错
+            uploader.on( 'uploadError', function( file ) {
+                $( '#'+file.id ).find('p.state').text('上传出错');
+            });
+            // 完成上传完
+            uploader.on( 'uploadComplete', function( file ) {
+                $( '#'+file.id ).find('.progress').fadeOut();
+            });
+
+            $btn.on('click', function () {
+                if ($(this).hasClass('disabled')) {
+                    return false;
+                }
+                uploader.upload();
+                // if (state === 'ready') {
+                //     uploader.upload();
+                // } else if (state === 'paused') {
+                //     uploader.upload();
+                // } else if (state === 'uploading') {
+                //     uploader.stop();
+                // }
+            });
+        });
+    }
+</script>
+<script type="text/javascript">
+    //ajax表单提交
+    $("#form-user-edit").submit(function(e){
+        var res = $(this).serialize();
+        var url = $(this).attr('url');
+        $.ajax({
+            url:  url,
+            data: res,
+            type: 'post',
+            success:function(data){
+                console.log(data.message);
+                if (data.code == 1) {
+                    layer.alert(data.message,{icon:6},function (index) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        window.location.href = "{:url('index')}";
+                        parent.location.reload();
+                    });
+                } else{
+                    layer.alert(data.message,{icon:5},function (index) {
+                        layer.close(index);
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+        return false; // 阻止表单跳转
+    });
+</script>
+
+</body>
+
+</html>

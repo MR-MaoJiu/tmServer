@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="百度地图,百度地图API，百度地图自定义工具，百度地图所见即所得工具"/>
+    <meta name="description" content="百度地图API自定义地图，帮助用户在可视化操作下生成百度地图"/>
+    <title>百度地图API自定义地图</title>
+    <!--引用百度地图API-->
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+</head>
+<body>
+<!--百度地图容器-->
+<div style="width:598px;height:355px;border:#ccc solid 1px;" id="dituContent"></div>
+</body>
+<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap() {
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+    }
+
+    //创建地图函数：
+    function createMap() {
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point({$longitude}, {$latitude});//定义一个中心点坐标
+        map.centerAndZoom(point, 12);//设定地图的中心点和坐标并将地图显示在地图容器中
+        var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25), {
+            offset: new BMap.Size(-10, -20), // 指定定位位置
+            imageOffset: new BMap.Size(0, 0 - 12 * 25) // 设置图片偏移
+        });
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        var label = new BMap.Label("当前发帖位置", {"offset": new BMap.Size(15, 0)});//label的偏移量，为了让label的中心显示在点上，第一个参数是x轴上的位置移动（负数表示向左移动），第二个是y轴上的位置移动（负数表示向上移动）
+        marker.setLabel(label);
+        map.addOverlay(marker);
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+
+    }
+
+
+    initMap();//创建和初始化地图
+</script>
+
+</html>

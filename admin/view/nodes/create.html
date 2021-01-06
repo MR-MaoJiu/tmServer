@@ -1,0 +1,42 @@
+{extend name="layout/create"}
+{block name="title"}
+    <title>权限添加</title>
+{/block}
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-add" url="{:url('save')}" enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="x-red">*</span>权限名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="url" class="layui-form-label">
+                <span class="x-red">*</span>权限规则
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="url" name="url" required=""
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>权限状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" value="1" name="status" lay-skin="primary" title="有效权限" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>有效</span><i class="layui-icon"></i></div>
+                <input type="checkbox" value="0" name="status" lay-skin="primary" title="无效权限"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>无效</span><i class="layui-icon"></i></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-add" class="layui-form-label">
+            </label>
+            <button id="btn-add" class="layui-btn" lay-filter="add" lay-submit="">
+                增加权限
+            </button>
+        </div>
+    </form>
+</div>
+{/block}

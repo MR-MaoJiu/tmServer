@@ -1,0 +1,190 @@
+{extend name="layout/create"}
+{block name="title"}
+<title>版本添加</title>
+{/block}
+{block name="content"}
+<script type="text/javascript">
+    $(function (obj) {
+        //开始上传按钮
+        var $btn = $('#ctlBtn');
+        //文件信息显示区域
+        var $list = $('#thelist');
+        //当前状态
+        var state = 'pending';
+
+        //初始化Web Uploader
+        var uploader = WebUploader.create({
+            // swf文件路径
+            swf: 'webuploader/Uploader.swf',
+            // 文件接收服务端。
+            server: '{:url("Upload/uploadFile")}',
+            // 选择文件的按钮。可选。
+            //选择完毕后自动 上传
+            auto: true,
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            fileNumLimit: 1,//验证文件总数量, 超出则不允许加入队列
+            pick: '#picker',
+            accept: {
+                title: 'APP',
+                mimeTypes: 'app/*'
+            },
+        });
+
+        // 当有文件被添加进队列的时候（选择文件后调用）
+        uploader.on('fileQueued', function (file) {
+            $list.append('<div id="' + file.id + '" class="item">' +
+                '<h4 class="info">' + file.name + '</h4>' +
+                '<p class="state">等待上传...</p>' +
+                '</div>');
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            var $li = $('#' + file.id);
+            $li.find('p.state').text('上传中（' + parseInt(percentage * 100) + '%）');
+
+        });
+
+        // 文件上传成功后会调用
+        uploader.on('uploadSuccess', function (file, response) {
+            $('#' + file.id).find('p.state').text('APK上传成功');
+            $list.append('<input type="hidden" id="src"  name="src" value="' + response.filePath + '" />');
+            console.log(response.filePath);
+
+        });
+
+        // 文件上传失败后会调用
+        uploader.on('uploadError', function (file) {
+            $('#' + file.id).find('p.state').text('上传出错');
+        });
+
+        // 文件上传完毕后会调用（不管成功还是失败）
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').fadeOut();
+        });
+
+        // all事件（所有的事件触发都会响应到）
+        uploader.on('all', function (type) {
+            if (type === 'startUpload') {
+                state = 'uploading';
+            } else if (type === 'stopUpload') {
+                state = 'paused';
+            } else if (type === 'uploadFinished') {
+                state = 'done';
+            }
+
+            if (state === 'uploading') {
+                $btn.text('暂停上传');
+            } else {
+                $btn.text('开始上传');
+            }
+        });
+
+        // 开始上传按钮点击事件响应
+        $btn.on('click', function () {
+            if (state === 'uploading') {
+                uploader.stop();
+            } else {
+                uploader.upload();
+            }
+        });
+    });
+</script>
+<style>
+    /*文件选择*/
+    #picker {
+        display: inline-block;
+        width: 180px;
+        display: block;
+        height: auto;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+        margin: auto;
+    }
+
+    .btns {
+        width: 180px;
+        display: block;
+        height: auto;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+        margin: auto;
+
+    }
+
+    .btns2 {
+        width: 150px;
+        display: block;
+        height: 28px;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+        margin: auto;
+
+    }
+</style>
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-add" url="{:url('save')}">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="x-red">*</span>版本名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>版本状态</label>
+            <div class="layui-input-block">
+                <input type="radio" value="1" name="status" lay-skin="primary" title="发布">
+<!--                <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>发布</span><i-->
+<!--                        class="layui-icon"></i></div>-->
+                <input type="radio" value="0" name="status" lay-skin="primary" title="不发布" checked="">
+<!--                <div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>不发布</span><i-->
+                <!--                        class="layui-icon"></i></div>-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>上传新版本
+            </label>
+            <div class="demo">
+                <!--<div id="uploadfile">-->
+                <!--用来存放文件信息-->
+                <!--    <div id="the_2655" class="uploader-list"></div>-->
+                <!--    <div class="form-group form-inline">-->
+                <!--        <div id="pick_2655" style="float:left">选择版本</div>-->
+                <!--        <button id="Btn_2655" class="btn btn-default" style="padding: 5px 10px;border-radius: 3px;">开始上传</button>-->
+                <!--    </div>-->
+                <!--</div>-->
+                <div id="uploader" class="wu-example ">
+                    <div class="btns" id="picker">
+                        <div class="btns2">选择APK</div>
+                    </div>
+                    <!--用来存放文件信息-->
+                    <div id="thelist" class="uploader-list"></div>
+                </div>
+                <div id="success"></div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="desc" class="layui-form-label">
+                版本描述
+            </label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="desc" name="desc" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-add" class="layui-form-label">
+            </label>
+            <button id="btn-add" class="layui-btn" lay-filter="add" lay-submit="">
+                增加版本
+            </button>
+        </div>
+    </form>
+</div>
+{/block}

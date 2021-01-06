@@ -1,0 +1,69 @@
+{extend name="layout/index"}
+{block name="title"}
+<title>问题列表</title>
+{/block}
+{block name="x-nav"}
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="{:url('Index/index')}">首页</a>
+        <a href="{:url('Quesstion/index')}">问题管理</a>
+        <a>
+          <cite>问题列表</cite></a>
+      </span>
+  <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+{/block}
+{block name="form"}
+<form class="layui-form layui-col-md12 x-so" action="{:url('Quesstion/index')}" method="get">
+  <input class="layui-input" placeholder="开始日" name="start" id="start">
+  <input class="layui-input" placeholder="截止日" name="end" id="end">
+  <input type="text" name="text"  placeholder="请输入问题内容" autocomplete="off" class="layui-input">
+  <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+  <button class="layui-btn"  lay-submit="" onclick="exportTable()">导出excel</button>
+</form>
+{/block}
+{block name="btn"}
+  <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+{/block}
+{block name="content"}
+<table class="layui-table" id="LAY-EXPORT-TEST">
+  <thead>
+  <tr class="ttt">
+    <th>
+      <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+    </th>
+    <th>ID</th>
+    <th>问题</th>
+    <th>问题内容</th>
+    <th>问题截图</th>
+    <th>时间</th>
+    <th>操作</th></tr>
+  </thead>
+  <tbody>
+  {volist name="list" id="vo"}
+  <tr class="line">
+    <td>
+      <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$vo.id}'><i class="layui-icon">&#xe605;</i></div>
+    </td>
+    <td>{$vo.id}</td>
+    <td>{$vo.quesstion}</td>
+    <td>{$vo.text}</td>
+    <td>
+        <img src="{$vo.img}" width="80">
+    </td>
+    <td>{$vo.create_time}</td>
+
+    <td class="td-manage">
+<!--      <a title="编辑" onclick="x_admin_show('修改问题','/admin/Quesstion/edit/?id={$vo.id}',600,400)">-->
+<!--        <i class="layui-icon">&#xe642;</i>-->
+<!--      </a>-->
+      <a class="del" title="删除" link="{:url('delete',['id'=>$vo.id])}" >
+        <i class="layui-icon">&#xe640;</i>
+      </a>
+    </td>
+  </tr>
+  {/volist}
+  </tbody>
+</table>
+{/block}

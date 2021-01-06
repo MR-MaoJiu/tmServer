@@ -1,0 +1,56 @@
+{extend name="layout/edit"}
+{block name="title"}
+<title>管理员修改</title>
+{/block}
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-edit" url="{:url('save')}" enctype="multipart/form-data">
+        <input type="hidden" value="{$info.id}" name="id">
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>管理员名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_email" value="{$info.name}" name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="email" id="email" name="email" value="{$info.email}" required="" lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_password" class="layui-form-label">
+                <span class="x-red">*</span>密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" id="L_password" name="password" placeholder="填密码" required=""
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>状态</label>
+            <div class="layui-input-block">
+                <input type="radio" value="{$info.status}" name="status" lay-skin="primary" title="有效管理员" checked="">
+<!--                <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>有效</span><i-->
+<!--                        class="layui-icon"></i></div>-->
+                <input type="radio" value="{$info.status}" name="status" lay-skin="primary" title="无效管理员">
+<!--                <div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>无效</span><i class="layui-icon"></i>-->
+                <!--                </div>-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-edit" class="layui-form-label">
+            </label>
+            <button id="btn-edit" class="layui-btn" lay-filter="edit" lay-submit="">
+                修改管理员
+            </button>
+        </div>
+    </form>
+</div>
+{/block}

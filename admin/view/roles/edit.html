@@ -1,0 +1,42 @@
+{extend name="layout/edit"}
+{block name="title"}
+    <title>角色修改</title>
+{/block}
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-edit" url="{:url('save')}" enctype="multipart/form-data">
+        <input type="hidden" value="{$info.id}" name="id">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="x-red">*</span>角色名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" value="{$info.name}"  name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>拥有权限</label>
+            <div class="layui-input-block">
+                {volist id="vo" name="nodes"}
+                    <input type="checkbox" value="{$vo.id}" name="nid[]" lay-skin="primary" title="{$vo.name}"><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>{$vo.name}</span><i class="layui-icon"></i></div>
+                {/volist}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>角色状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="有效角色" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>有效</span><i class="layui-icon"></i></div>
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="无效角色"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>无效</span><i class="layui-icon"></i></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-edit" class="layui-form-label">
+            </label>
+            <button id="btn-edit" class="layui-btn" lay-filter="edit" lay-submit="">
+                修改角色
+            </button>
+        </div>
+    </form>
+</div>
+{/block}

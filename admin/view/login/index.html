@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/admin1/css/login.css">
+</head>
+<body>
+<div id="wrapper" class="login-page">
+    <div id="login_form" class="form">
+        <form class="login-form" id="loginform" method="post" url="{:url('save')}" enctype="multipart/form-data">
+            <h2>管理登录</h2>
+            <input type="text" placeholder="用户名" name="name" value="" id="user_name"/>
+            <input type="password" name="password" placeholder="密码" id="password"/>
+            <div style="display: inline-block;width: 100%"><img src="{:url('Login/verify')}" style="width: 100%"
+                                                                onclick='this.src="{:url(' Login/verify')}"'
+                alt="captcha" /> <input type="text" placeholder="请输入验证码" name="captcha" value=""></div>
+            <button id="login">登　录</button>
+            <p class="message">还没有账户? <a href="{:url('Login/regist')}">立刻创建</a></p>
+        </form>
+    </div>
+</div>
+
+<script src="/admin1/js/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/layer/1.8.5/layer.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.message a').click(function () {
+            $('form').animate({
+                height: 'toggle',
+                opacity: 'toggle'
+            }, 'slow');
+        });
+    });
+
+    //登录
+    $("#loginform").submit(function (e) {
+        var res = $(this).serialize();
+        var url = "{:url('Login/save')}";
+        $.ajax({
+            url: url,
+            data: res,
+            type: 'post',
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.alert(data.msg, {icon: 6}, function (index) {
+                        layer.close(index);
+                        window.location.href = "{:url('Index/index')}";
+                    });
+                } else {
+                    layer.alert(data.msg, {icon: 5}, function (index) {
+                        layer.close(index);
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+        return false; // 阻止表单跳转
+    });
+
+</script>
+</body>
+</html>

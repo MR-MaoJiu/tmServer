@@ -1,0 +1,45 @@
+{extend name="layout/create"}
+{block name="title"}
+<title>发布公告</title>
+{/block}
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-add" url="{:url('save')}" enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="x-red">*</span>公告名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="body" class="layui-form-label">
+                <span class="x-red">*</span>公告内容
+            </label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="body" name="body" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>公告状态</label>
+            <div class="layui-input-block">
+                <input type="radio" value="1" name="status" lay-skin="primary" title="上架" checked="">
+                <!--                <div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>发布</span><i-->
+                <!--                        class="layui-icon"></i></div>-->
+                <input type="radio" value="0" name="status" lay-skin="primary" title="下架">
+                <!--                <div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>下架</span><i class="layui-icon"></i>-->
+            </div>
+        </div>
+</div>
+<div class="layui-form-item">
+    <label for="btn-add" class="layui-form-label">
+    </label>
+    <button id="btn-add" class="layui-btn" lay-filter="add" lay-submit="">
+        发布公告
+    </button>
+</div>
+</form>
+</div>
+{/block}

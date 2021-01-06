@@ -1,0 +1,120 @@
+{extend name="layout/index"}
+{block name="title"}
+<title>公告列表</title>
+{/block}
+{block name="x-nav"}
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.11&key=e22196035aaa10db3b0b6eb1ab64619e"></script>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="{:url('Index/index')}">首页</a>
+        <a href="{:url('Posts/index')}">资源管理</a>
+        <a>
+          <cite>资源列表</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+{/block}
+{block name="form"}
+<form class="layui-form layui-col-md12 x-so" action="{:url('Posts/index')}" method="get">
+    <select name="status">
+        <option value="">全部状态</option>
+        <option value="0">封禁状态</option>
+        <option value="1">正常状态</option>
+        <!--        <option value="2">离线</option>-->
+    </select>
+    <select name="type">
+        <option value="">全部资源</option>
+        <option value="0">图片资源</option>
+        <option value="1">音频资源</option>
+        <option value="2">视频资源</option>
+    </select>
+    <input class="layui-input" placeholder="开始日" name="start" id="start">
+    <input class="layui-input" placeholder="截止日" name="end" id="end">
+    <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+</form>
+{/block}
+{block name="btn"}
+<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+{/block}
+{block name="content"}
+<table class="layui-table" id="LAY-EXPORT-TEST">
+    <thead>
+    <tr class="ttt">
+        <th>
+            <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i>
+            </div>
+        </th>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>内容</th>
+        <th>资源地址</th>
+        <th>点赞数</th>
+        <th>坐标</th>
+        <th>发帖时间</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="list" id="vo"}
+    <tr class="line">
+        <td>
+            <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$vo.id}'><i
+                    class="layui-icon">&#xe605;</i>
+            </div>
+        </td>
+        <td>{$vo.id}</td>
+        <td>{$vo.nickname}</td>
+        <td>{$vo.body}</td>
+        <td>
+            {if condition="$vo.rstatus" eq 1}
+            {switch $vo.type}
+            {case 0}<img src="{$vo.src}"> {/case}
+            {case 1}
+            <audio src="{$vo.src}" controls="controls"/>
+            {/case}
+            {case 2}
+            <video src="{$vo.src}" width="160" height="90" controls="controls"/>
+            {/case}
+            {/switch}
+            {else}
+            无
+            {/if}
+        </td>
+        <td>{$vo.likenum}</td>
+        <td>
+            <!--            经纬度-->
+            <a class="fa-map" title="经度：{$vo.longitude}纬度：{$vo.latitude}"
+               onclick="x_admin_show('地图','/admin/Posts/maps/?longitude={$vo.longitude}&latitude={$vo.latitude}',600,400)">
+                <i class="layui-icon">&#xe715;</i>
+            </a>
+        </td>
+        <td>{$vo.create_time}</td>
+        <td class="td-status">
+            <span {if condition="$vo.status" eq 1} class="layui-btn layui-btn-normal layui-btn-mini"
+                  {else}class="layui-btn layui-btn-danger layui-btn-mini" {/if}>{if condition="$vo.status" eq
+            1}已上架{else}已下架{/if}</span></td>
+
+        <td class="td-manage">
+            <a class="editstatus" sid="{$vo.id}" name="{$vo.id}"
+               link="{:url('Posts/upstatus')}" href="javascript:;"
+               {if
+               condition="$vo.status" eq 1} title="下架" {else} title="上架" {/if} >
+            <i class="layui-icon">&#xe601;</i>
+            </a>
+            <!--            <a title="编辑"-->
+            <!--               onclick="x_admin_show('修改公告','/admin/announcement/edit/?id={$vo.id}',600,400)">-->
+            <!--                <i class="layui-icon">&#xe642;</i>-->
+            <!--            </a>-->
+            <a class="del" title="删除" link="{:url('delete',['id'=>$vo.id])}">
+                <i class="layui-icon">&#xe640;</i>
+            </a>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{/block}

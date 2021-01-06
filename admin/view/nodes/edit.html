@@ -1,0 +1,43 @@
+{extend name="layout/edit"}
+{block name="title"}
+    <title>权限修改</title>
+{/block}
+{block name="content"}
+<div class="x-body">
+    <form class="layui-form" method="post" id="form-user-edit" url="{:url('save')}" enctype="multipart/form-data">
+        <input type="hidden" value="{$info.id}" name="id">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                         <span class="x-red">*</span>权限名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" value="{$info.name}" name="name" required="" lay-verify="name"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="url" class="layui-form-label">
+                <span class="x-red">*</span>权限规则
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="url" value="{$info.url}" name="url" required=""
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>权限状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="有效权限" checked=""><div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>有效</span><i class="layui-icon"></i></div>
+                <input type="checkbox" value="{$info.status}" name="status" lay-skin="primary" title="无效权限"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>无效</span><i class="layui-icon"></i></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="btn-edit" class="layui-form-label">
+            </label>
+            <button id="btn-edit" class="layui-btn" lay-filter="edit" lay-submit="">
+                修改权限
+            </button>
+        </div>
+    </form>
+</div>
+{/block}

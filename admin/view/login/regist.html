@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="/admin1/css/login.css">
+</head>
+<body>
+<div id="wrapper" class="login-page">
+    <div id="regist_form" class="form">
+        <form class="login-form" id="registform" method="post" url="{:url('doregist')}" enctype="multipart/form-data">
+            <h2>用户注册</h2>
+            <input type="text" name="name" placeholder="用户名" value="" id="r_user_name"/>
+            <input type="password" name="password" placeholder="密码" id="r_password"/>
+            <input type="text" placeholder="电子邮件" name="email" id="r_emial"/>
+            <button id="create">创建账户</button>
+            <p class="message">已经有了一个账户? <a href="{:url('Login/index')}">立刻登录</a></p>
+        </form>
+    </div>
+</div>
+<script src="/admin1/js/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/layer/1.8.5/layer.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        $('.message a').click(function () {
+            $('form').animate({
+                height: 'toggle',
+                opacity: 'toggle'
+            }, 'slow');
+        });
+    });
+
+    //注册
+    $("#registform").submit(function (e) {
+        var res = $(this).serialize();
+        var url = "{:url('Login/doregist')}";
+        $.ajax({
+            url: url,
+            data: res,
+            type: 'post',
+            success: function (data) {
+                if (data.code == 1) {
+                    layer.alert(data.msg, {icon: 6}, function (index) {
+                        layer.close(index);
+                        window.location.href = "{:url('Login/index')}";
+                    });
+                } else {
+                    layer.alert(data.msg, {icon: 5}, function (index) {
+                        layer.close(index);
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+        return false; // 阻止表单跳转
+    });
+</script>
+</body>
+</html>
